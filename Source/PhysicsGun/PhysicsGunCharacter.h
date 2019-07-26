@@ -74,8 +74,14 @@ public:
 	TSubclassOf<class APhysicsGunProjectile> AltProjectileClass;
 
 	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class USoundBase* FireSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float fireSoundPitch = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		float altFireSoundPitch = 0.5f;
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -91,6 +97,8 @@ protected:
 	void OnFire();
 
 	void OnFireAlt();
+
+	void PlayFireSound(float pitch);
 
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();

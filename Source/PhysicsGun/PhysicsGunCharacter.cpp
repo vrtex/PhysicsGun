@@ -169,11 +169,7 @@ void APhysicsGunCharacter::OnFire()
 		}
 	}
 
-	// try and play the sound if specified
-	if(FireSound != NULL)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	}
+	PlayFireSound(fireSoundPitch);
 
 	// try and play a firing animation if specified
 	if(FireAnimation != NULL)
@@ -218,11 +214,7 @@ void APhysicsGunCharacter::OnFireAlt()
 		}
 	}
 
-	// try and play the sound if specified
-	if(FireSound != NULL)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	}
+	PlayFireSound(altFireSoundPitch);
 
 	// try and play a firing animation if specified
 	if(FireAnimation != NULL)
@@ -234,6 +226,13 @@ void APhysicsGunCharacter::OnFireAlt()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+}
+
+void APhysicsGunCharacter::PlayFireSound(float pitch)
+{
+	if(FireSound == NULL)
+		return;
+	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(), 1, pitch);
 }
 
 void APhysicsGunCharacter::OnResetVR()
