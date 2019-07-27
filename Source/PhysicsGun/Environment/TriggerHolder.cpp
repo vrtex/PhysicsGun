@@ -37,12 +37,12 @@ void UTriggerHolder::BeginPlay()
 	
 }
 
-void UTriggerHolder::UseTriggers(bool value)
+void UTriggerHolder::UseTriggers(bool value, AActor * user)
 {
 	for(auto t : Triggers)
 	{
 		if(!IsValid(t))
 			continue;
-		t->Trigger(value);
+		t->Trigger(value, user);
 	}
 }

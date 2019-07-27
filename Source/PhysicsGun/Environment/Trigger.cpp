@@ -13,7 +13,7 @@ UTrigger::UTrigger()
 	// ...
 }
 
-void UTrigger::Trigger(bool value)
+void UTrigger::Trigger(bool value, AActor * Instigator)
 {
 	if(currentState == value)
 		return;
@@ -21,7 +21,7 @@ void UTrigger::Trigger(bool value)
 	currentState = value;
 
 	if(currentState)
-		OnTriggerOn.Broadcast();
+		OnTriggerOn.Broadcast(Instigator);
 	else
-		OnTriggerOff.Broadcast();
+		OnTriggerOff.Broadcast(Instigator);
 }

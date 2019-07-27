@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Trigger.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTriggerDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTriggerDelegate, AActor *, Instigator);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class PHYSICSGUN_API UTrigger : public UActorComponent
@@ -18,7 +18,7 @@ public:
 	UTrigger();
 
 	UFUNCTION(BlueprintCallable)
-		void Trigger(bool value);
+		void Trigger(bool value, AActor * Instigator);
 
 	UPROPERTY(BlueprintAssignable, Category = "Something")
 		FTriggerDelegate OnTriggerOn;

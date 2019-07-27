@@ -23,7 +23,7 @@ protected:
 public:	
 
 	UFUNCTION(BlueprintCallable)
-		void UseTriggers(bool value);
+		void UseTriggers(bool value, AActor * User);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		TArray<AActor *> TriggerActors;
