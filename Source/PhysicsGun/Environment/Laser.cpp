@@ -35,8 +35,6 @@ ALaser::ALaser()
 void ALaser::BeginPlay()
 {
 	Super::BeginPlay();
-	TriggerOn(nullptr);
-	TriggerOff(nullptr);
 }
 
 // Called every frame
