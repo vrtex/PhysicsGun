@@ -56,6 +56,9 @@ private:
 	UFUNCTION()
 		void TriggerOff(AActor * User);
 
+	void TurnOn();
+
+	void TurnOff();
 
 	void UpdateLaser(bool newValue);
 

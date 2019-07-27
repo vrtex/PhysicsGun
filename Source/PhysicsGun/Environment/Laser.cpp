@@ -35,6 +35,8 @@ ALaser::ALaser()
 void ALaser::BeginPlay()
 {
 	Super::BeginPlay();
+	TriggerOn(nullptr);
+	TriggerOff(nullptr);
 }
 
 // Called every frame
@@ -49,14 +51,24 @@ void ALaser::Tick(float DeltaTime)
 
 void ALaser::TriggerOn(AActor * User)
 {
-	UE_LOG(LogTemp, Warning, TEXT("On"));
-	On = true;
+	TurnOn();
 }
 
 void ALaser::TriggerOff(AActor * User)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Off"));
+	TurnOff();
+}
+
+void ALaser::TurnOn()
+{
 	On = true;
+}
+
+void ALaser::TurnOff()
+{
+	On = false;
+	BlockingPoint->SetWorldLocation(Start->GetComponentLocation());
+	UpdateLaser(false);
 }
 
 void ALaser::UpdateLaser(bool newValue)
