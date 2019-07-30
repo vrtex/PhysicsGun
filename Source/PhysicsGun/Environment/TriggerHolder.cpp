@@ -26,6 +26,11 @@ void UTriggerHolder::BeginPlay()
 	// ...
 	for(auto actor : TriggerActors)
 	{
+		if(!IsValid(actor))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Invalid actor in trigger holder, %s"), *GetOwner()->GetName());
+			continue;
+		}
 		UTrigger * nextTrigger = nullptr;
 		nextTrigger = Cast<UTrigger>(actor->GetComponentByClass(UTrigger::StaticClass()));
 		if(!IsValid(nextTrigger))

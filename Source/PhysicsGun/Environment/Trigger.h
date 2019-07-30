@@ -13,6 +13,9 @@ class PHYSICSGUN_API UTrigger : public UActorComponent
 {
 	GENERATED_BODY()
 
+protected:
+	virtual void BeginPlay() override;
+
 public:	
 	// Sets default values for this component's properties
 	UTrigger();
@@ -20,10 +23,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void Trigger(bool value, AActor * Instigator);
 
-	UPROPERTY(BlueprintAssignable, Category = "Something")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Something")
 		FTriggerDelegate OnTriggerOn;
 
-	UPROPERTY(BlueprintAssignable, Category = "Something")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Something")
 		FTriggerDelegate OnTriggerOff;
 
 private:

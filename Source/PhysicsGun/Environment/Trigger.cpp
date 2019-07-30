@@ -2,6 +2,7 @@
 
 
 #include "Trigger.h"
+#include "Runtime/Engine/Classes/GameFramework/Actor.h"
 
 // Sets default values for this component's properties
 UTrigger::UTrigger()
@@ -12,6 +13,20 @@ UTrigger::UTrigger()
 
 	// ...
 }
+
+// Called when the game starts
+void UTrigger::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// ...
+	auto triggers = GetOwner()->GetComponentsByClass(UTrigger::StaticClass());
+	if(triggers.Num() != 1)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Multiple triggers on %s"), *GetOwner()->GetName());
+	}
+}
+
 
 void UTrigger::Trigger(bool value, AActor * Instigator)
 {
