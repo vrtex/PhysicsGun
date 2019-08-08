@@ -51,4 +51,8 @@ public:
 
 	 UFUNCTION()
 		void UnregisterActor(AActor * actor);
+
+private:
+
+	void PrintCurrent();
 };

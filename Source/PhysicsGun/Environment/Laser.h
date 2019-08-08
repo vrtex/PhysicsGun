@@ -19,22 +19,22 @@ public:
 		class USceneComponent * Start;
 
 
-	UPROPERTY(VisibleDefaultsOnly, Category = Setup)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Setup)
 		class USceneComponent * End;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = Setup)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Setup)
 		class USceneComponent * BlockingPoint;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = Setup)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Setup)
 		class UTrigger * Trigger;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = Setup)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Setup)
 		class UTriggerHolder * TriggerHolder;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Setup)
 		class UCableComponent * Beam;
 
-	UPROPERTY(EditAnywhere, Category = Beam)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Beam)
 		bool On = true;
 
 	UPROPERTY(VisibleAnywhere, Category = Beam)

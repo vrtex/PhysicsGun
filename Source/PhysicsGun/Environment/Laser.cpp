@@ -35,6 +35,8 @@ ALaser::ALaser()
 void ALaser::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Connected = TraceLaser();
 }
 
 // Called every frame
@@ -95,7 +97,25 @@ void ALaser::Block()
 bool ALaser::TraceLaser()
 {
 	FHitResult Hit;
+	FCollisionObjectQueryParams objectParams;// (ECC_TO_BITFIELD(ECC_Pawn) | ECC_TO_BITFIELD(ECC_PhysicsBody));
+	objectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_Pawn);
+	objectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_PhysicsBody);
+	FCollisionQueryParams queryParams;
+	queryParams.bTraceComplex = true;
+
+	/*
+
 	bool gotHit = GetWorld()->LineTraceSingleByChannel(Hit, Start->GetComponentLocation(), End->GetComponentLocation(), ECollisionChannel::ECC_Visibility);
+	
+	if(gotHit)
+	{
+		BlockingPoint->SetWorldLocation(gotHit ? Hit.ImpactPoint : End->GetComponentLocation());
+		return false;
+	}
+
+	gotHit = GetWorld()->LineTraceSingleByChannel(Hit, Start->GetComponentLocation(), End->GetComponentLocation(), ECollisionChannel::ECC_Pawn);
+	*/
+	bool gotHit = GetWorld()->LineTraceSingleByObjectType(Hit, Start->GetComponentLocation(), End->GetComponentLocation(), objectParams, queryParams);
 
 	BlockingPoint->SetWorldLocation(gotHit ? Hit.ImpactPoint : End->GetComponentLocation());
 

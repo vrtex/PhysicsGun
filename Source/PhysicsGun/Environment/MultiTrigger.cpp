@@ -24,6 +24,8 @@ void UMultiTrigger::BeginPlay()
 
 	for(auto & actor : Actors)
 	{
+
+		UE_LOG(LogTemp, Warning, TEXT("Got actor: %s"), *actor.triggerOwner->GetName());
 		if(!IsValid(actor.triggerOwner))
 		{
 			UE_LOG(LogTemp, Error, TEXT("Multi trigger on %s has invalid trigger owner: "), *GetOwner()->GetName());
@@ -48,12 +50,14 @@ void UMultiTrigger::BeginPlay()
 			trigger->OnTriggerOn.AddDynamic(this, &UMultiTrigger::UnregisterActor);
 		}
 
-		if(actor.bActiveAtStart && !actor.bActiveAtStart)
+		if(actor.bActiveAtStart && !actor.bNegate)
 			currentActors.Add(actor.triggerOwner);
 		else if(!actor.bActiveAtStart && actor.bNegate)
 			currentActors.Add(actor.triggerOwner);
 
+
 	}
+	PrintCurrent();
 }
 
 void UMultiTrigger::RegisterActor(AActor * actor)
@@ -64,9 +68,13 @@ void UMultiTrigger::RegisterActor(AActor * actor)
 		return;
 	}
 
+
 	currentActors.AddUnique(actor);
 	if(currentActors.Num() == Actors.Num())
-		OnTriggerOn.Broadcast(GetOwner());
+		Trigger(true, actor);
+
+	UE_LOG(LogTemp, Warning, TEXT("adding: %s to: %s"), *actor->GetName(), *GetOwner()->GetName());
+	PrintCurrent();
 }
 
 void UMultiTrigger::UnregisterActor(AActor * actor)
@@ -74,11 +82,27 @@ void UMultiTrigger::UnregisterActor(AActor * actor)
 
 	if(!currentActors.Contains(actor))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Multi trigger error, UMultiTrigger::UnregisterActor"));
+		UE_LOG(LogTemp, Error, TEXT("Multi trigger error on: %s, UMultiTrigger::UnregisterActor, %s"), *GetOwner()->GetName(), *actor->GetName());
 		return;
 	}
 
 	currentActors.Remove(actor);
 	if(currentActors.Num() == Actors.Num() - 1)
-		OnTriggerOff.Broadcast(GetOwner());
+		Trigger(false, actor);
+
+	
+	UE_LOG(LogTemp, Warning, TEXT("removing: %s from: %s"), *actor->GetName(), *GetOwner()->GetName());
+	PrintCurrent();
+}
+
+void UMultiTrigger::PrintCurrent()
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s: current actors:-------------"), *GetOwner()->GetName());
+
+	for(auto a : currentActors)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *a->GetName());
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("---------"));
 }
