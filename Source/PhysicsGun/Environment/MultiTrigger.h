@@ -7,7 +7,6 @@
 #include "Trigger.h"
 #include "MultiTrigger.generated.h"
 
-
 USTRUCT(BlueprintType)
 struct FTriggerActorInfo
 {

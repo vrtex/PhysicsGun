@@ -24,18 +24,19 @@ void UTriggerHolder::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	for(auto actor : TriggerActors)
+	for(auto & actor : TriggerActors)
 	{
-		if(!IsValid(actor))
+		if(!IsValid(actor.triggerOwner))
 		{
 			UE_LOG(LogTemp, Error, TEXT("Invalid actor in trigger holder, %s"), *GetOwner()->GetName());
 			continue;
 		}
 		UTrigger * nextTrigger = nullptr;
-		nextTrigger = Cast<UTrigger>(actor->GetComponentByClass(UTrigger::StaticClass()));
+		nextTrigger = Cast<UTrigger>(actor.triggerOwner->GetComponentByClass(UTrigger::StaticClass()));
 		if(!IsValid(nextTrigger))
 			continue;
 
+		actor.trigger = nextTrigger;
 		Triggers.Add(nextTrigger);
 	}
 
@@ -44,10 +45,19 @@ void UTriggerHolder::BeginPlay()
 
 void UTriggerHolder::UseTriggers(bool value, AActor * user)
 {
+	/*
 	for(auto t : Triggers)
 	{
 		if(!IsValid(t))
 			continue;
 		t->Trigger(value, user);
+	}
+	*/
+
+	for(auto & t : TriggerActors)
+	{
+		if(!IsValid(t.trigger))
+			continue;
+		t.trigger->Trigger(t.bNegate ? !value : value , user);
 	}
 }

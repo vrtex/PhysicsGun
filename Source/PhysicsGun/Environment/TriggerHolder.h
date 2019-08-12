@@ -7,6 +7,20 @@
 #include "TriggerHolder.generated.h"
 
 
+
+USTRUCT(BlueprintType)
+struct FTriggerInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+		AActor * triggerOwner = nullptr;
+	UPROPERTY(EditAnywhere)
+		bool bNegate = false;
+
+	class UTrigger * trigger = nullptr;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class PHYSICSGUN_API UTriggerHolder : public UActorComponent
 {
@@ -26,7 +40,7 @@ public:
 		void UseTriggers(bool value, AActor * User);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		TArray<AActor *> TriggerActors;
+		TArray<FTriggerInfo> TriggerActors;
 
 private:
 	TArray<class UTrigger*> Triggers;

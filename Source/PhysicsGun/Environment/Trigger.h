@@ -23,6 +23,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void Trigger(bool value, AActor * Instigator);
 
+
+	UFUNCTION(BlueprintCallable)
+		void SetCurrentState(bool value);
+
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Something")
 		FTriggerDelegate OnTriggerOn;
 
@@ -30,5 +34,5 @@ public:
 		FTriggerDelegate OnTriggerOff;
 
 private:
-	bool currentState = false;
+	bool currentState;
 };

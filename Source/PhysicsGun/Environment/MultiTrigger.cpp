@@ -71,10 +71,10 @@ void UMultiTrigger::RegisterActor(AActor * actor)
 
 	currentActors.AddUnique(actor);
 	if(currentActors.Num() == Actors.Num())
-		Trigger(true, actor);
+		Trigger(true, GetOwner());
 
 	UE_LOG(LogTemp, Warning, TEXT("adding: %s to: %s"), *actor->GetName(), *GetOwner()->GetName());
-	// PrintCurrent();
+	PrintCurrent();
 }
 
 void UMultiTrigger::UnregisterActor(AActor * actor)
@@ -88,10 +88,10 @@ void UMultiTrigger::UnregisterActor(AActor * actor)
 
 	currentActors.Remove(actor);
 	if(currentActors.Num() == Actors.Num() - 1)
-		Trigger(false, actor);
+		Trigger(false, GetOwner());
 
 	
-	UE_LOG(LogTemp, Warning, TEXT("removing: %s from: %s"), *actor->GetName(), *GetOwner()->GetName());
+	// UE_LOG(LogTemp, Warning, TEXT("removing: %s from: %s"), *actor->GetName(), *GetOwner()->GetName());
 	PrintCurrent();
 }
 
