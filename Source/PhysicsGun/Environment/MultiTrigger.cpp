@@ -57,7 +57,7 @@ void UMultiTrigger::BeginPlay()
 
 
 	}
-	PrintCurrent();
+	// PrintCurrent();
 }
 
 void UMultiTrigger::RegisterActor(AActor * actor)
@@ -74,7 +74,7 @@ void UMultiTrigger::RegisterActor(AActor * actor)
 		Trigger(true, actor);
 
 	UE_LOG(LogTemp, Warning, TEXT("adding: %s to: %s"), *actor->GetName(), *GetOwner()->GetName());
-	PrintCurrent();
+	// PrintCurrent();
 }
 
 void UMultiTrigger::UnregisterActor(AActor * actor)
