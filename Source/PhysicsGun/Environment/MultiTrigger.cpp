@@ -73,7 +73,7 @@ void UMultiTrigger::RegisterActor(AActor * actor)
 	if(currentActors.Num() == Actors.Num())
 		Trigger(true, GetOwner());
 
-	UE_LOG(LogTemp, Warning, TEXT("adding: %s to: %s"), *actor->GetName(), *GetOwner()->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("adding: %s"), *GetOwner()->GetName());
 	PrintCurrent();
 }
 
@@ -91,7 +91,7 @@ void UMultiTrigger::UnregisterActor(AActor * actor)
 		Trigger(false, GetOwner());
 
 	
-	// UE_LOG(LogTemp, Warning, TEXT("removing: %s from: %s"), *actor->GetName(), *GetOwner()->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("removing: from: %s"), *GetOwner()->GetName());
 	PrintCurrent();
 }
 
@@ -101,7 +101,14 @@ void UMultiTrigger::PrintCurrent()
 
 	for(auto a : currentActors)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *a->GetName());
+		if(!IsValid(a))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Invalid actor"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *a->GetName());
+		}
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("---------"));
