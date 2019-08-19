@@ -64,7 +64,7 @@ void UMultiTrigger::RegisterActor(AActor * actor)
 {
 	if(currentActors.Contains(actor))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Multi trigger error, UMultiTrigger::RegisterActor"));
+		UE_LOG(LogTemp, Error, TEXT("Multi trigger error on: %s, UMultiTrigger::RegisterActor, %s"), *GetOwner()->GetName(), *actor->GetName());
 		return;
 	}
 
