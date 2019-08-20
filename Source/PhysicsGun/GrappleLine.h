@@ -17,7 +17,7 @@ public:
 	// Sets default values for this component's properties
 	UGrappleLine();
 
-protected:
+public:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
@@ -26,7 +26,7 @@ protected:
 	UFUNCTION()
 		void OnDeactivated(UActorComponent* Component);
 	UFUNCTION(BlueprintCallable)
-		void SetTarget(FVector NewTarget);
+		void SetTarget(AActor * NewTarget);
 
 public:	
 	// Called every frame
@@ -46,6 +46,6 @@ protected:
 
 private:
 	class APhysicsGunCharacter * ControlledCharacter;
-	FVector CurrentTarget;
+	AActor * CurrentTarget;
 		
 };

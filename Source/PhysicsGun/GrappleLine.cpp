@@ -49,7 +49,7 @@ void UGrappleLine::OnDeactivated(UActorComponent * Component)
 	ControlledCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Falling);
 }
 
-void UGrappleLine::SetTarget(FVector NewTarget)
+void UGrappleLine::SetTarget(AActor * NewTarget)
 {
 	Activate();
 	CurrentTarget = NewTarget;
@@ -59,9 +59,14 @@ void UGrappleLine::SetTarget(FVector NewTarget)
 void UGrappleLine::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if(!IsValid(CurrentTarget))
+	{
+		Deactivate();
+		return;
+	}
 
 	FVector currentLocation = ControlledCharacter->GetActorLocation();
-	FVector direction = (CurrentTarget - currentLocation);
+	FVector direction = (CurrentTarget->GetActorLocation() - currentLocation);
 
 	if(direction.Size() < DistanceTolerance)
 	{

@@ -37,10 +37,15 @@ APhysicsGunProjectile::APhysicsGunProjectile()
 
 void APhysicsGunProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	OnHitHandler(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
+}
+
+void APhysicsGunProjectile::OnHitHandler(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
 	ASpecialEntity * spawned = nullptr;
 	if(ObjectToSpawn)
 		spawned = GetWorld()->SpawnActor<ASpecialEntity>(ObjectToSpawn.Get(), Hit.ImpactPoint, UKismetMathLibrary::FindLookAtRotation(Hit.ImpactPoint, Hit.ImpactPoint + Hit.ImpactNormal));
-	
+
 	if(spawned)
 		spawned->Setup(OtherComp, Hit.ImpactPoint);
 

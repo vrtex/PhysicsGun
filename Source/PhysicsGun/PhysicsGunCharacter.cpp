@@ -10,6 +10,8 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
+#include "GrappleLineProjectile.h"
+#include "GrappleLine.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -120,6 +122,7 @@ void APhysicsGunCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APhysicsGunCharacter::OnFire);
 	PlayerInputComponent->BindAction("FireAlt", IE_Pressed, this, &APhysicsGunCharacter::OnFireAlt);
+	PlayerInputComponent->BindAction("ToggleFireMode", IE_Pressed, this, &APhysicsGunCharacter::OnToggleFireMode);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -142,90 +145,64 @@ void APhysicsGunCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 void APhysicsGunCharacter::OnFire()
 {
 	// try and fire a projectile
-	if(ProjectileClass != NULL)
-	{
-		UWorld* const World = GetWorld();
-		if(World != NULL)
-		{
-			if(bUsingMotionControllers)
-			{
-				const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-				const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-				World->SpawnActor<APhysicsGunProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-			}
-			else
-			{
-				const FRotator SpawnRotation = GetControlRotation();
-				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-				const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+	SpawnProjectile(bNormalFireMode ? ProjectileClass : GrappleLineProjectileClass);
 
-				//Set Spawn Collision Handling Override
-				FActorSpawnParameters ActorSpawnParams;
-				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-				// spawn the projectile at the muzzle
-				World->SpawnActor<APhysicsGunProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-			}
-		}
-	}
 
 	PlayFireSound(fireSoundPitch);
 
-	// try and play a firing animation if specified
-	if(FireAnimation != NULL)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if(AnimInstance != NULL)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
-	}
+	PlayFireAnimation();
 }
 
 
 void APhysicsGunCharacter::OnFireAlt()
 {
 	// try and fire a projectile
-	if(AltProjectileClass != NULL)
-	{
-		UWorld* const World = GetWorld();
-		if(World != NULL)
-		{
-			if(bUsingMotionControllers)
-			{
-				const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-				const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-				World->SpawnActor<APhysicsGunProjectile>(AltProjectileClass, SpawnLocation, SpawnRotation);
-			}
-			else
-			{
-				const FRotator SpawnRotation = GetControlRotation();
-				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-				const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+	SpawnProjectile(bNormalFireMode ? AltProjectileClass : GrappleLineProjectileClass);
 
-				//Set Spawn Collision Handling Override
-				FActorSpawnParameters ActorSpawnParams;
-				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-				// spawn the projectile at the muzzle
-				World->SpawnActor<APhysicsGunProjectile>(AltProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-			}
-		}
-	}
 
 	PlayFireSound(altFireSoundPitch);
 
 	// try and play a firing animation if specified
-	if(FireAnimation != NULL)
+	PlayFireAnimation();
+}
+
+APhysicsGunProjectile * APhysicsGunCharacter::SpawnProjectile(TSubclassOf<APhysicsGunProjectile> classToSpawn)
+{
+	if(classToSpawn == NULL)
+		return nullptr;
+	UWorld * const World = GetWorld();
+	if(World == NULL)
+		return nullptr;
+	APhysicsGunProjectile * toReturn = nullptr;
+	if(bUsingMotionControllers)
 	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if(AnimInstance != NULL)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
+		const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
+		const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
+		toReturn = World->SpawnActor<APhysicsGunProjectile>(classToSpawn, SpawnLocation, SpawnRotation);
 	}
+	else
+	{
+		const FRotator SpawnRotation = GetControlRotation();
+		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+		const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+		//Set Spawn Collision Handling Override
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+		// spawn the projectile at the muzzle
+		toReturn = World->SpawnActor<APhysicsGunProjectile>(classToSpawn, SpawnLocation, SpawnRotation, ActorSpawnParams);
+	}
+
+	if(toReturn && !bNormalFireMode)
+		SetupGrappleLineProjectile(Cast<AGrappleLineProjectile>(toReturn));
+
+	return toReturn;
+}
+
+void APhysicsGunCharacter::OnToggleFireMode()
+{
+	bNormalFireMode = !bNormalFireMode;
 }
 
 void APhysicsGunCharacter::PlayFireSound(float pitch)
@@ -233,6 +210,23 @@ void APhysicsGunCharacter::PlayFireSound(float pitch)
 	if(FireSound == NULL)
 		return;
 	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(), 1, pitch);
+}
+
+void APhysicsGunCharacter::PlayFireAnimation()
+{
+	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+	if(FireAnimation == NULL || AnimInstance == NULL)
+		return;
+
+	AnimInstance->Montage_Play(FireAnimation, 1.f);
+}
+
+void APhysicsGunCharacter::SetupGrappleLineProjectile(AGrappleLineProjectile * projectile)
+{
+	if(!projectile)
+		return;
+
+	projectile->Setup(Cast<UGrappleLine>(GetComponentByClass(UGrappleLine::StaticClass())));
 }
 
 void APhysicsGunCharacter::OnResetVR()

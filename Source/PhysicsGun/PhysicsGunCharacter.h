@@ -47,6 +47,8 @@ class APhysicsGunCharacter : public ACharacter
 
 	bool bControlsEnabled = true;
 
+	bool bNormalFireMode = true;
+
 public:
 	APhysicsGunCharacter();
 
@@ -75,6 +77,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class APhysicsGunProjectile> AltProjectileClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class APhysicsGunProjectile> GrappleLineProjectileClass;
+
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class USoundBase* FireSound;
@@ -100,7 +105,15 @@ protected:
 
 	void OnFireAlt();
 
+	APhysicsGunProjectile * SpawnProjectile(TSubclassOf<APhysicsGunProjectile> classToSpawn);
+
+	void OnToggleFireMode();
+
 	void PlayFireSound(float pitch);
+
+	void PlayFireAnimation();
+
+	void SetupGrappleLineProjectile(class AGrappleLineProjectile * projectile);
 
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
