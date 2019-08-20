@@ -26,7 +26,6 @@ void UTrigger::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Multiple triggers on %s"), *GetOwner()->GetName());
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Value: %d, owner: %s"), (int)currentState, *GetOwner()->GetName());
 }
 
 
@@ -34,7 +33,6 @@ void UTrigger::Trigger(bool value, AActor * Instigator)
 {
 	if(currentState == value)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("lol, value: %d"), (int)value);
 		return;
 	}
 
@@ -48,6 +46,5 @@ void UTrigger::Trigger(bool value, AActor * Instigator)
 
 void UTrigger::SetCurrentState(bool value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("setting value: %d"), (int)value);
 	currentState = value;
 }

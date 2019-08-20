@@ -1,0 +1,23 @@
+#pragma once
+
+// UPROPERTIES
+#define UPS_BlueprintAssignable BlueprintAssignable
+#define UPS_EditAnywhere EditAnywhere
+#define UPS_EditInstanceOnly EditInstanceOnly
+#define UPS_EditDefaultsOnly EditDefaultsOnly
+#define UPS_VisibleAnywhere VisibleAnywhere
+#define UPS_VisibleInstanceOnly VisibleInstanceOnly
+#define UPS_VisibleDefaultsOnly VisibleDefaultsOnly
+#define UPS_BlueprintReadOnly BlueprintReadOnly
+#define UPS_BlueprintReadWrite BlueprintReadWrite
+#define UPS_BlueprintCallable BlueprintCallable
+
+// UFUNCIONS
+#define UFS_BlueprintCallable BlueprintCallable
+#define UFS_BlueprintGetter BlueprintGetter
+#define UFS_BlueprintImplementableEvent BlueprintImplementableEvent
+#define UFS_BlueprintNativeEvent BlueprintNativeEvent
+#define UFS_BlueprintPure BlueprintPure
+#define UFS_BlueprintSetter BlueprintSetter
+#define UFS_CallInEditor CallInEditor
+#define UFS_Category Category
