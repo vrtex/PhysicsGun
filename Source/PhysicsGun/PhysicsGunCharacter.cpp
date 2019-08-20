@@ -305,6 +305,8 @@ void APhysicsGunCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const F
 
 void APhysicsGunCharacter::MoveForward(float Value)
 {
+	if(!bControlsEnabled)
+		return;
 	if (Value != 0.0f)
 	{
 		// add movement in that direction
@@ -314,6 +316,8 @@ void APhysicsGunCharacter::MoveForward(float Value)
 
 void APhysicsGunCharacter::MoveRight(float Value)
 {
+	if(!bControlsEnabled)
+		return;
 	if (Value != 0.0f)
 	{
 		// add movement in that direction

@@ -45,6 +45,8 @@ class APhysicsGunCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMotionControllerComponent* L_MotionController;
 
+	bool bControlsEnabled = true;
+
 public:
 	APhysicsGunCharacter();
 
@@ -152,6 +154,8 @@ public:
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+	FORCEINLINE void SetControllsEnabled(bool enabled) { bControlsEnabled = enabled; }
 
 };
 
